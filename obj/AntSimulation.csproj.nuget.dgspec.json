@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/workspaces/AntSimulation/AntSimulation.csproj": {}
+    "/workspaces/AntSim-editied-/AntSimulation.csproj": {}
   },
   "projects": {
-    "/workspaces/AntSimulation/AntSimulation.csproj": {
+    "/workspaces/AntSim-editied-/AntSimulation.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspaces/AntSimulation/AntSimulation.csproj",
+        "projectUniqueName": "/workspaces/AntSim-editied-/AntSimulation.csproj",
         "projectName": "AntSimulation",
-        "projectPath": "/workspaces/AntSimulation/AntSimulation.csproj",
+        "projectPath": "/workspaces/AntSim-editied-/AntSimulation.csproj",
         "packagesPath": "/home/codespace/.nuget/packages/",
-        "outputPath": "/workspaces/AntSimulation/obj/",
+        "outputPath": "/workspaces/AntSim-editied-/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/codespace/.nuget/NuGet/NuGet.Config"

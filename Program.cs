@@ -1,7 +1,4 @@
-//Skeleton Program code for the AQA A Level Paper 1 Summer 2026 examination
-//this code should be used in conjunction with the Preliminary Material
-//written by the AQA Programmer Team
-//developed in the Visual Studio Community Edition programming environment
+
 
 using System;
 using System.Collections.Generic;
@@ -42,7 +39,7 @@ namespace AntSimCS
                 switch (Choice)
                 {
                     case "1":
-                        Console.WriteLine(ThisSimulation.GetDetails());
+                        ThisSimulation.DisplayMap();
                         break;
                     case "2":
                         int StartRow = 0, StartColumn = 0, EndRow = 0, EndColumn = 0;
@@ -278,6 +275,73 @@ namespace AntSimCS
                     }
                 }
                 return Strongest;
+            }
+
+            public void DisplayMap()
+            {
+                string Spacer = "--";
+                for (int Column = 1; Column <= NumberOfColumns; Column++)
+                {
+                    Console.Write($"   {Column}   ");
+                    Spacer += "------------";
+                }
+                Console.WriteLine();
+                for (int Row = 1; Row <= NumberOfRows; Row++)
+                {
+                    Console.WriteLine(Spacer);
+                    for (int Column = 1; Column <= NumberOfColumns; Column++)
+                    {
+                        Console.Write(" | ");
+                        Cell TempCell = Grid[GetIndex(Row, Column)];
+                        if (GetNestInCell(TempCell) != null)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.Write("N");
+
+                        }
+                        else
+                        {
+                            Console.Write(" ");
+                        }
+                        if (GetNumberOfAntsInCell(TempCell) > 0)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Write(GetNumberOfAntsInCell(TempCell));
+
+                        }
+                        else
+                        {
+                            Console.Write(" ");
+                        }
+                        if (GetNumberOfPheromonesInCell(TempCell) > 0)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.Write(GetNumberOfPheromonesInCell(TempCell));
+
+                        }
+                        else
+                        {
+                            Console.Write(" ");
+                        }
+                        if (TempCell.GetAmountOfFood() > 0)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.Write(TempCell.GetAmountOfFood());
+                            if (TempCell.GetAmountOfFood() < 1000)
+                            {
+                                Console.Write(" ");
+                            }
+                        }
+                        else
+                        {
+                            Console.Write("    ");
+                        }
+                        Console.ResetColor();
+                        Console.Write(" |");
+                    }
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
             }
 
             public string GetDetails()
