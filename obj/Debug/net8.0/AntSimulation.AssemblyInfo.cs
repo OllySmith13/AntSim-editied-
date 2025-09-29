@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AntSimulation")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7cf093e122ce1d7ba1ba1a7995ca09abbe7c5972")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+af40099d6008b05c83f6251a88ec0f9f02ffea23")]
 [assembly: System.Reflection.AssemblyProductAttribute("AntSimulation")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AntSimulation")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

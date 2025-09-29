@@ -260,7 +260,18 @@ namespace AntSimCS
                 }
                 return Count;
             }
-
+            public int GetTotalPheromoneStrength(Cell C)
+            {
+                int Total = 0;
+                foreach (Pheromone P in Pheromones)
+                {
+                    if (P.InSameLocation(C))
+                    {
+                        Total += P.GetStrength();
+                    }
+                }
+                return Total;
+            }
             public int GetStrongestPheromoneInCell(Cell C)
             {
                 int Strongest = 0;
@@ -313,10 +324,10 @@ namespace AntSimCS
                         {
                             Console.Write(" ");
                         }
-                        if (GetNumberOfPheromonesInCell(TempCell) > 0)
+                        if (GetTotalPheromoneStrength(TempCell) > 0)
                         {
                             Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.Write(GetNumberOfPheromonesInCell(TempCell));
+                            Console.Write(GetTotalPheromoneStrength(TempCell));
 
                         }
                         else
@@ -500,6 +511,7 @@ namespace AntSimCS
                         {
                             if (A.GetFoodCarried() > 0)
                             {
+                                Pheromones.Add(new Pheromone(A.GetRow(), A.GetColumn(), A.GetID(), NewPheromoneStrength, PheromoneDecay));
                                 UpdateAntsPheromoneInCell(A);
                             }
                             A.ChooseCellToMoveTo(GetIndicesOfNeighbours(A.GetRow(), A.GetColumn()),
@@ -546,6 +558,7 @@ namespace AntSimCS
 
             public virtual void AdvanceStage(List<Nest> Nests, List<Ant> Ants, List<Pheromone> Pheromones)
             {
+
             }
 
             public virtual string GetDetails()
