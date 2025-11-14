@@ -12,24 +12,45 @@ namespace AntSimCS
 
         static void Main()
         {
+            Console.Clear();
+            string SimNo = "";
             List<int> SimulationParameters = new List<int>();
-            Console.Write("Enter simulation number: ");
-            string SimNo = Console.ReadLine();
-            switch (SimNo)
+            DisplaySimulation();
+            Console.WriteLine();
+            Console.Write("Enter simulation number 1 - 6: ");
+            do
             {
-                case "1":
-                    SimulationParameters = new List<int> { 1, 5, 5, 500, 3, 5, 1000, 50 };
-                    break;
-                case "2":
-                    SimulationParameters = new List<int> { 1, 5, 5, 500, 3, 5, 1000, 100 };
-                    break;
-                case "3":
-                    SimulationParameters = new List<int> { 1, 10, 10, 500, 3, 9, 1000, 25 };
-                    break;
-                case "4":
-                    SimulationParameters = new List<int> { 2, 10, 10, 500, 3, 6, 1000, 25 };
-                    break;
+                SimNo = Console.ReadLine();
+                switch (SimNo)
+                {
+                    case "1":
+                        SimulationParameters = new List<int> { 1, 5, 5, 500, 3, 5, 1000, 50 };
+                        break;
+                    case "2":
+                        SimulationParameters = new List<int> { 1, 5, 5, 500, 3, 5, 1000, 100 };
+                        break;
+                    case "3":
+                        SimulationParameters = new List<int> { 1, 10, 10, 500, 3, 9, 1000, 25 };
+                        break;
+                    case "4":
+                        SimulationParameters = new List<int> { 2, 10, 10, 500, 3, 6, 1000, 25 };
+                        break;
+                    case "5":
+                        SimulationParameters = new List<int> { 2, 7, 7, 500, 3, 10, 500, 25 };
+                        break;
+                    case "6":
+                        for (int i = 0; i < 8; i++)
+                        {
+                            Console.Write("Set " + GetParameters(i));
+                            SimulationParameters.Add(Convert.ToInt32(Console.ReadLine()));
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Choose a number from 1 to 5:");
+                        break;
+                }
             }
+            while (SimNo.Length != 1 || !"123456".Contains(SimNo));
             Simulation ThisSimulation = new Simulation(SimulationParameters);
             string Choice;
             do
@@ -62,9 +83,51 @@ namespace AntSimCS
                         ThisSimulation.AdvanceStage(NumberOfStages);
                         Console.WriteLine($"Simulation moved on {NumberOfStages} stages{Environment.NewLine}");
                         break;
+                    default:
+                        Console.WriteLine("Pick a number from 1 to 5, or 9 to quit");
+                        break;
                 }
             } while (Choice != "9");
             Console.ReadLine();
+        }
+        static string GetParameters(int index)
+        {
+            string[] parameters = new string[8]
+            {
+                "Number of nests: ",
+                "Number of rows: ",
+                "Number of columns: ",
+                "Starting food in nest: ",
+                "Starting number of food cells: ",
+                "Starting ants in nest: ",
+                "New pheromone strength: ",
+                "Pheromone decay: "
+            };
+            return parameters[index];
+        }
+        static void DisplaySimulationParameters(List<int> SimulationParameters)
+        {
+            Console.WriteLine();
+            for(int i = 0; i < 8; i++)
+            {
+                Console.WriteLine(GetParameters(i) + SimulationParameters[i]);
+            }
+            Console.WriteLine();
+        }
+        static void DisplaySimulation()
+        {
+            Console.WriteLine("Simulation Options:");
+            Console.WriteLine("1:");
+            DisplaySimulationParameters(new List<int> { 1, 5, 5, 500, 3, 5, 1000, 50 });
+            Console.WriteLine("2:");
+            DisplaySimulationParameters(new List<int> { 1, 5, 5, 500, 3, 5, 1000, 100 });
+            Console.WriteLine("3:");
+            DisplaySimulationParameters(new List<int> { 1, 10, 10, 500, 3, 9, 1000, 25 });
+            Console.WriteLine("4:");
+            DisplaySimulationParameters(new List<int> { 2, 10, 10, 500, 3, 6, 1000, 25 });
+            Console.WriteLine("5:");
+            DisplaySimulationParameters(new List<int> { 2, 7, 7, 500, 3, 10, 500, 25 });
+            Console.WriteLine("6: Custom parameters");
         }
 
         static void DisplayMenu()
