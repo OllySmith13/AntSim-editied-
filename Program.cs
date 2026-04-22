@@ -167,7 +167,7 @@ namespace AntSimCS
             protected List<Pheromone> Pheromones = new List<Pheromone>();
             protected List<Nest> Nests = new List<Nest>();
             protected int NumberOfRows, NumberOfColumns, StartingFoodInNest, StartingNumberOfFoodCells, StartingNumberOfNests;
-            protected int StartingAntsInNest, NewPheromoneStrength, PheromoneDecay;
+            protected int StartingAntsInNest, NewPheromoneStrength, PheromoneDecay, TimeSinceLastRain;
 
             public Simulation(List<int> SimulationParameters)
             {
@@ -180,6 +180,7 @@ namespace AntSimCS
                 NewPheromoneStrength = SimulationParameters[6];
                 PheromoneDecay = SimulationParameters[7];
                 int Row, Column;
+                TimeSinceLastRain = 25;
                 for (Row = 1; Row <= NumberOfRows; Row++)
                 {
                     for (Column = 1; Column <= NumberOfColumns; Column++)
@@ -245,8 +246,8 @@ namespace AntSimCS
                     foreach (int ColumnDirection in new int[] { -1, 0, 1 })
                     {
                         int NeighbourRow = Row + RowDirection, NeighbourColumn = Column + ColumnDirection;
-                        if ((RowDirection != 0 || ColumnDirection != 0) && NeighbourRow >= 1 && NeighbourRow <= NumberOfRows &&
-                            NeighbourColumn >= 1 && NeighbourColumn <= NumberOfColumns)
+                        if (((RowDirection != 0 || ColumnDirection != 0) && NeighbourRow >= 1 && NeighbourRow <= NumberOfRows &&
+                            NeighbourColumn >= 1 && NeighbourColumn <= NumberOfColumns) || !Grid[GetIndex(NeighbourRow, NeighbourColumn)].GetContainsWater())
                         {
                             ListOfNeighbours.Add(GetIndex(NeighbourRow, NeighbourColumn));
                         }
@@ -536,20 +537,42 @@ namespace AntSimCS
 
             public void AdvanceStage(int NumberOfStages)
             {
+                if(RGen.Next(0,101) < 8 && TimeSinceLastRain > 24)
+                {
+                    TimeSinceLastRain = 0;
+                }
+                else
+                {
+                    TimeSinceLastRain++;
+                }
                 for (int Count = 1; Count <= NumberOfStages; Count++)
                 {
                     List<Pheromone> PheromonesToDelete = new List<Pheromone>();
                     foreach (Pheromone P in Pheromones)
                     {
-                        P.AdvanceStage(Nests, Ants, Pheromones);
-                        if (P.GetStrength() == 0)
+                        if(Grid[GetIndex(P.GetRow(),P.GetColumn())].GetContainsWater())
                         {
                             PheromonesToDelete.Add(P);
+                        }
+                        else
+                        {
+                            P.AdvanceStage(Nests, Ants, Pheromones);
+                            if (P.GetStrength() == 0)
+                            {
+                                PheromonesToDelete.Add(P);
+                            }
                         }
                     }
                     foreach (Pheromone P in PheromonesToDelete)
                     {
                         Pheromones.Remove(P);
+                    }
+                    foreach(Cell c in Grid)
+                    {
+                        if(c.GetContainsWater() && c.GetAmountOfFood() > 0)
+                        {
+                            c.UpdateFoodInCell(-c.GetAmountOfFood());
+                        }
                     }
                     foreach (Ant A in Ants)
                     {
@@ -633,15 +656,25 @@ namespace AntSimCS
         class Cell : Entity
         {
             protected int AmountOfFood;
+            protected bool ContainsWater;
 
             public Cell(int StartRow, int StartColumn) : base(StartRow, StartColumn)
             {
                 AmountOfFood = 0;
+                ContainsWater = false;
             }
 
             public int GetAmountOfFood()
             {
                 return AmountOfFood;
+            }
+            public void AddWater(bool newContainsWater)
+            {
+                ContainsWater = newContainsWater;
+            }
+            public bool GetContainsWater()
+            {
+                return ContainsWater;
             }
 
             public override string GetDetails()
