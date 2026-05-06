@@ -1,4 +1,8 @@
-
+//Skeleton Program code for the AQA A Level Paper 1 Summer 2026 examination
+//this code should be used in conjunction with the Preliminary Material
+//written by the AQA Programmer Team
+//developed in the Visual Studio Community Edition programming environment
+//Version 2
 
 using System;
 using System.Collections.Generic;
@@ -12,45 +16,24 @@ namespace AntSimCS
 
         static void Main()
         {
-            Console.Clear();
-            string SimNo = "";
             List<int> SimulationParameters = new List<int>();
-            DisplaySimulation();
-            Console.WriteLine();
-            Console.Write("Enter simulation number 1 - 6: ");
-            do
+            Console.Write("Enter simulation number: ");
+            string SimNo = Console.ReadLine();
+            switch (SimNo)
             {
-                SimNo = Console.ReadLine();
-                switch (SimNo)
-                {
-                    case "1":
-                        SimulationParameters = new List<int> { 1, 5, 5, 500, 3, 5, 1000, 50 };
-                        break;
-                    case "2":
-                        SimulationParameters = new List<int> { 1, 5, 5, 500, 3, 5, 1000, 100 };
-                        break;
-                    case "3":
-                        SimulationParameters = new List<int> { 1, 10, 10, 500, 3, 9, 1000, 25 };
-                        break;
-                    case "4":
-                        SimulationParameters = new List<int> { 2, 10, 10, 500, 3, 6, 1000, 25 };
-                        break;
-                    case "5":
-                        SimulationParameters = new List<int> { 2, 7, 7, 500, 3, 10, 500, 25 };
-                        break;
-                    case "6":
-                        for (int i = 0; i < 8; i++)
-                        {
-                            Console.Write("Set " + GetParameters(i));
-                            SimulationParameters.Add(Convert.ToInt32(Console.ReadLine()));
-                        }
-                        break;
-                    default:
-                        Console.WriteLine("Choose a number from 1 to 5:");
-                        break;
-                }
+                case "1":
+                    SimulationParameters = new List<int> { 1, 5, 5, 500, 3, 5, 1000, 50 };
+                    break;
+                case "2":
+                    SimulationParameters = new List<int> { 1, 5, 5, 500, 3, 5, 1000, 100 };
+                    break;
+                case "3":
+                    SimulationParameters = new List<int> { 1, 10, 10, 500, 3, 9, 1000, 25 };
+                    break;
+                case "4":
+                    SimulationParameters = new List<int> { 2, 10, 10, 500, 3, 6, 1000, 25 };
+                    break;
             }
-            while (SimNo.Length != 1 || !"123456".Contains(SimNo));
             Simulation ThisSimulation = new Simulation(SimulationParameters);
             string Choice;
             do
@@ -60,7 +43,7 @@ namespace AntSimCS
                 switch (Choice)
                 {
                     case "1":
-                        ThisSimulation.DisplayMap();
+                        Console.WriteLine(ThisSimulation.GetDetails());
                         break;
                     case "2":
                         int StartRow = 0, StartColumn = 0, EndRow = 0, EndColumn = 0;
@@ -83,51 +66,9 @@ namespace AntSimCS
                         ThisSimulation.AdvanceStage(NumberOfStages);
                         Console.WriteLine($"Simulation moved on {NumberOfStages} stages{Environment.NewLine}");
                         break;
-                    default:
-                        Console.WriteLine("Pick a number from 1 to 5, or 9 to quit");
-                        break;
                 }
             } while (Choice != "9");
             Console.ReadLine();
-        }
-        static string GetParameters(int index)
-        {
-            string[] parameters = new string[8]
-            {
-                "Number of nests: ",
-                "Number of rows: ",
-                "Number of columns: ",
-                "Starting food in nest: ",
-                "Starting number of food cells: ",
-                "Starting ants in nest: ",
-                "New pheromone strength: ",
-                "Pheromone decay: "
-            };
-            return parameters[index];
-        }
-        static void DisplaySimulationParameters(List<int> SimulationParameters)
-        {
-            Console.WriteLine();
-            for(int i = 0; i < 8; i++)
-            {
-                Console.WriteLine(GetParameters(i) + SimulationParameters[i]);
-            }
-            Console.WriteLine();
-        }
-        static void DisplaySimulation()
-        {
-            Console.WriteLine("Simulation Options:");
-            Console.WriteLine("1:");
-            DisplaySimulationParameters(new List<int> { 1, 5, 5, 500, 3, 5, 1000, 50 });
-            Console.WriteLine("2:");
-            DisplaySimulationParameters(new List<int> { 1, 5, 5, 500, 3, 5, 1000, 100 });
-            Console.WriteLine("3:");
-            DisplaySimulationParameters(new List<int> { 1, 10, 10, 500, 3, 9, 1000, 25 });
-            Console.WriteLine("4:");
-            DisplaySimulationParameters(new List<int> { 2, 10, 10, 500, 3, 6, 1000, 25 });
-            Console.WriteLine("5:");
-            DisplaySimulationParameters(new List<int> { 2, 7, 7, 500, 3, 10, 500, 25 });
-            Console.WriteLine("6: Custom parameters");
         }
 
         static void DisplayMenu()
@@ -167,7 +108,7 @@ namespace AntSimCS
             protected List<Pheromone> Pheromones = new List<Pheromone>();
             protected List<Nest> Nests = new List<Nest>();
             protected int NumberOfRows, NumberOfColumns, StartingFoodInNest, StartingNumberOfFoodCells, StartingNumberOfNests;
-            protected int StartingAntsInNest, NewPheromoneStrength, PheromoneDecay, TimeSinceLastRain;
+            protected int StartingAntsInNest, NewPheromoneStrength, PheromoneDecay;
 
             public Simulation(List<int> SimulationParameters)
             {
@@ -180,7 +121,6 @@ namespace AntSimCS
                 NewPheromoneStrength = SimulationParameters[6];
                 PheromoneDecay = SimulationParameters[7];
                 int Row, Column;
-                TimeSinceLastRain = 25;
                 for (Row = 1; Row <= NumberOfRows; Row++)
                 {
                     for (Column = 1; Column <= NumberOfColumns; Column++)
@@ -209,11 +149,20 @@ namespace AntSimCS
                 }
                 for (int Count = 1; Count <= StartingNumberOfFoodCells; Count++)
                 {
+                    bool Allowed;
                     do
                     {
+                        Allowed = true;
                         Row = RGen.Next(1, NumberOfRows + 1);
                         Column = RGen.Next(1, NumberOfColumns + 1);
-                    } while (Row == 2 && Column == 4);
+                        foreach (Nest N in Nests)
+                        {
+                            if (N.GetRow() == Row && N.GetColumn() == Column)
+                            {
+                                Allowed = false;
+                            }
+                        }
+                    } while (!Allowed);
                     AddFoodToCell(Row, Column, 500);
                 }
             }
@@ -246,8 +195,8 @@ namespace AntSimCS
                     foreach (int ColumnDirection in new int[] { -1, 0, 1 })
                     {
                         int NeighbourRow = Row + RowDirection, NeighbourColumn = Column + ColumnDirection;
-                        if (((RowDirection != 0 || ColumnDirection != 0) && NeighbourRow >= 1 && NeighbourRow <= NumberOfRows &&
-                            NeighbourColumn >= 1 && NeighbourColumn <= NumberOfColumns) || !Grid[GetIndex(NeighbourRow, NeighbourColumn)].GetContainsWater())
+                        if ((RowDirection != 0 || ColumnDirection != 0) && NeighbourRow >= 1 && NeighbourRow <= NumberOfRows &&
+                            NeighbourColumn >= 1 && NeighbourColumn <= NumberOfColumns)
                         {
                             ListOfNeighbours.Add(GetIndex(NeighbourRow, NeighbourColumn));
                         }
@@ -324,18 +273,7 @@ namespace AntSimCS
                 }
                 return Count;
             }
-            public int GetTotalPheromoneStrength(Cell C)
-            {
-                int Total = 0;
-                foreach (Pheromone P in Pheromones)
-                {
-                    if (P.InSameLocation(C))
-                    {
-                        Total += P.GetStrength();
-                    }
-                }
-                return Total;
-            }
+
             public int GetStrongestPheromoneInCell(Cell C)
             {
                 int Strongest = 0;
@@ -350,73 +288,6 @@ namespace AntSimCS
                     }
                 }
                 return Strongest;
-            }
-
-            public void DisplayMap()
-            {
-                string Spacer = "--";
-                for (int Column = 1; Column <= NumberOfColumns; Column++)
-                {
-                    Console.Write($"   {Column}   ");
-                    Spacer += "------------";
-                }
-                Console.WriteLine();
-                for (int Row = 1; Row <= NumberOfRows; Row++)
-                {
-                    Console.WriteLine(Spacer);
-                    for (int Column = 1; Column <= NumberOfColumns; Column++)
-                    {
-                        Console.Write(" | ");
-                        Cell TempCell = Grid[GetIndex(Row, Column)];
-                        if (GetNestInCell(TempCell) != null)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.Write("N");
-
-                        }
-                        else
-                        {
-                            Console.Write(" ");
-                        }
-                        if (GetNumberOfAntsInCell(TempCell) > 0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.Write(GetNumberOfAntsInCell(TempCell));
-
-                        }
-                        else
-                        {
-                            Console.Write(" ");
-                        }
-                        if (GetTotalPheromoneStrength(TempCell) > 0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Cyan;
-                            Console.Write(GetTotalPheromoneStrength(TempCell));
-
-                        }
-                        else
-                        {
-                            Console.Write(" ");
-                        }
-                        if (TempCell.GetAmountOfFood() > 0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Magenta;
-                            Console.Write(TempCell.GetAmountOfFood());
-                            if (TempCell.GetAmountOfFood() < 1000)
-                            {
-                                Console.Write(" ");
-                            }
-                        }
-                        else
-                        {
-                            Console.Write("    ");
-                        }
-                        Console.ResetColor();
-                        Console.Write(" |");
-                    }
-                    Console.WriteLine();
-                }
-                Console.WriteLine();
             }
 
             public string GetDetails()
@@ -537,42 +408,20 @@ namespace AntSimCS
 
             public void AdvanceStage(int NumberOfStages)
             {
-                if(RGen.Next(0,101) < 8 && TimeSinceLastRain > 24)
-                {
-                    TimeSinceLastRain = 0;
-                }
-                else
-                {
-                    TimeSinceLastRain++;
-                }
                 for (int Count = 1; Count <= NumberOfStages; Count++)
                 {
                     List<Pheromone> PheromonesToDelete = new List<Pheromone>();
                     foreach (Pheromone P in Pheromones)
                     {
-                        if(Grid[GetIndex(P.GetRow(),P.GetColumn())].GetContainsWater())
+                        P.AdvanceStage(Nests, Ants, Pheromones);
+                        if (P.GetStrength() == 0)
                         {
                             PheromonesToDelete.Add(P);
-                        }
-                        else
-                        {
-                            P.AdvanceStage(Nests, Ants, Pheromones);
-                            if (P.GetStrength() == 0)
-                            {
-                                PheromonesToDelete.Add(P);
-                            }
                         }
                     }
                     foreach (Pheromone P in PheromonesToDelete)
                     {
                         Pheromones.Remove(P);
-                    }
-                    foreach(Cell c in Grid)
-                    {
-                        if(c.GetContainsWater() && c.GetAmountOfFood() > 0)
-                        {
-                            c.UpdateFoodInCell(-c.GetAmountOfFood());
-                        }
                     }
                     foreach (Ant A in Ants)
                     {
@@ -583,7 +432,7 @@ namespace AntSimCS
                             AddFoodToNest(A.GetFoodCarried(), A.GetRow(), A.GetColumn());
                             A.UpdateFoodCarried(-A.GetFoodCarried());
                         }
-                        else if (CurrentCell.GetAmountOfFood() > 0 && A.GetFoodCarried() == 0)
+                        else if (CurrentCell.GetAmountOfFood() > 0 && A.GetFoodCarried() == 0 && A.GetFoodCapacity() > 0)
                         {
                             int FoodObtained;
                             do
@@ -597,7 +446,6 @@ namespace AntSimCS
                         {
                             if (A.GetFoodCarried() > 0)
                             {
-                                Pheromones.Add(new Pheromone(A.GetRow(), A.GetColumn(), A.GetID(), NewPheromoneStrength, PheromoneDecay));
                                 UpdateAntsPheromoneInCell(A);
                             }
                             A.ChooseCellToMoveTo(GetIndicesOfNeighbours(A.GetRow(), A.GetColumn()),
@@ -644,7 +492,6 @@ namespace AntSimCS
 
             public virtual void AdvanceStage(List<Nest> Nests, List<Ant> Ants, List<Pheromone> Pheromones)
             {
-
             }
 
             public virtual string GetDetails()
@@ -656,25 +503,15 @@ namespace AntSimCS
         class Cell : Entity
         {
             protected int AmountOfFood;
-            protected bool ContainsWater;
 
             public Cell(int StartRow, int StartColumn) : base(StartRow, StartColumn)
             {
                 AmountOfFood = 0;
-                ContainsWater = false;
             }
 
             public int GetAmountOfFood()
             {
                 return AmountOfFood;
-            }
-            public void AddWater(bool newContainsWater)
-            {
-                ContainsWater = newContainsWater;
-            }
-            public bool GetContainsWater()
-            {
-                return ContainsWater;
             }
 
             public override string GetDetails()
@@ -879,6 +716,7 @@ namespace AntSimCS
                 }
                 int AntsToCull = 0;
                 int Count = 0;
+                int AntsInNestCount = 0;
                 foreach (Ant A in Ants)
                 {
                     if (A.GetNestRow() == Row && A.GetNestColumn() == Column)
@@ -890,28 +728,33 @@ namespace AntSimCS
                         else
                         {
                             Count += 2;
+                            AntsInNestCount++;
                         }
                     }
                 }
                 ChangeFood(-Count);
-                if (FoodLevel == 0 && Ants.Count > 0)
+                if (FoodLevel == 0 && AntsInNestCount > 0)
                 {
                     AntsToCull++;
                 }
-                if (FoodLevel < Ants.Count)
+                if (FoodLevel < AntsInNestCount)
                 {
                     AntsToCull++;
                 }
-                if (FoodLevel < Ants.Count * 5)
+                if (FoodLevel < AntsInNestCount * 5)
                 {
                     AntsToCull++;
-                    if (AntsToCull > Ants.Count) 
+                    if (AntsToCull > AntsInNestCount)
                     {
-                        AntsToCull = Ants.Count;
+                        AntsToCull = AntsInNestCount;
                     }
                     for (int A = 1; A <= AntsToCull; A++)
                     {
-                        int RPos = RGen.Next(0, Ants.Count);
+                        int RPos;
+                        do
+                        {
+                            RPos = RGen.Next(0, Ants.Count);
+                        } while (!(Ants[RPos].GetNestRow() == Row && Ants[RPos].GetNestColumn() == Column));
                         if (Ants[RPos].GetTypeOfAnt() == "queen")
                         {
                             NumberOfQueens--;
@@ -927,11 +770,12 @@ namespace AntSimCS
                         if (RNo1 < 50)
                         {
                             int RNo2 = RGen.Next(0, 100);
-                            if (RNo2 < 2) 
+                            if (RNo2 < 2)
                             {
                                 Ants.Add(new QueenAnt(Row, Column, Row, Column));
+                                NumberOfQueens++;
                             }
-                            else 
+                            else
                             {
                                 Ants.Add(new WorkerAnt(Row, Column, Row, Column));
                             }
@@ -979,4 +823,3 @@ namespace AntSimCS
         }
     }
 }
-
